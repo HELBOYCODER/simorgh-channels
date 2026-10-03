@@ -1,0 +1,19 @@
+Simorgh Channels — notice file
+==============================
+
+This repository is the curated registry of public Telegram channels that
+post free proxy configurations, used by the Simorgh macOS project's
+server-discovery harvest (see HELBOYCODER/simorgh-servers).
+
+The channel registry concept is taken from zeghostwriter/ZeroNet
+(https://github.com/zeghostwriter/ZeroNet, MIT License — Copyright (c)
+zeghostwriter/ZeroNet contributors; full text quoted in
+https://github.com/HELBOYCODER/simorgh-servers/blob/main/NOTICE), whose
+`deploy/crowd/telegram-channels.json` seed list is reproduced here under the
+Simorgh brand.
+
+The channels listed are independent third-party Telegram channels. Simorgh
+reads their public web pages (t.me/s/<name>) the way a browser would. The
+project does not operate, review, or endorse any channel or any configuration
+posted in one; every config harvested from a channel is tested before it can
+reach a user, and a channel that stops posting is dropped by the harvest.

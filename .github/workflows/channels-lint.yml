@@ -1,0 +1,45 @@
+name: channels-lint
+
+# Validates channels.json against the registry schema (array of {id, name,
+# url, tier, language}; unique ids; https://t.me/ urls; tier 1–3). Runs on
+# pull requests touching the registry and on pushes to main, so the harvest
+# in HELBOYCODER/simorgh-servers can always read this file from a commit
+# that lints clean.
+on:
+  pull_request:
+    paths:
+      - "channels.json"
+      - ".github/workflows/channels-lint.yml"
+  push:
+    branches: [main]
+    paths:
+      - "channels.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: schema check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: validate channels.json schema
+        run: python3 scripts/lint-channels.py channels.json
+      - name: sanity-check with jq (every entry has the five keys)
+        run: |
+          jq -e '
+            (type == "array") and
+            all(.[];
+              (keys | sort) == (["id", "language", "name", "tier", "url"] | sort) and
+              (.id | type == "string" and length > 0) and
+              (.name | type == "string" and length > 0) and
+              (.url | type == "string" and startswith("https://t.me/")) and
+              (.tier | type == "number" and IN(1, 2, 3)) and
+              (.language | type == "string" and length > 0)) and
+            ((map(.id) | length) == (map(.id) | unique | length))
+          ' channels.json
